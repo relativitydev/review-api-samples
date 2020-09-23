@@ -1,0 +1,16 @@
+{
+	"compilerOptions": {
+		"outDir": "./resource-files/",
+		"noImplicitAny": false,
+		"module": "es6",
+		"target": "es5",
+		"moduleResolution": "node",
+		"allowJs": true,
+		"lib": [
+			"es5",
+			"dom",
+			"es2015.promise",
+			"ES2015.Collection",
+		]
+	}
+}

@@ -1,0 +1,13 @@
+body {
+	background: linear-gradient(90deg,#fce3ec,#ffe8cc);
+}
+
+#clock {
+	margin: 0;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	-ms-transform: translate(-50%, -50%);
+	transform: translate(-50%, -50%);
+	font-size: 30px;
+}
