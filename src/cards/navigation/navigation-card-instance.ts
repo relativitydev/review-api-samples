@@ -8,7 +8,6 @@ export class NavigationCardInstance {
 
 	private _loaded: boolean;
 	private _viewerCollection;
-	private _queuePointer;
 
 	constructor(loggerFactory, card) {
 		this._loaded = false;
@@ -16,9 +15,7 @@ export class NavigationCardInstance {
 		this._logger = loggerFactory.create("NavigationCardInstance")
 		this._card = card;
 		this._viewerCollection = card.parameters[0];
-		this._queuePointer = this._viewerCollection.queuePointer;
 
-		this._registerQueuePointerEventHandlers(this._queuePointer);
 		this._registerViewerCollectionEventHandlers();
 	}
 
@@ -62,34 +59,24 @@ export class NavigationCardInstance {
 	}
 
 	private _registerViewerCollectionEventHandlers(): void {
-		this._viewerCollection.on("queuepointerchanged", this._handleQueuePointerChanged);
-	}
-
-	private _registerQueuePointerEventHandlers(queuePointer): void {
-		queuePointer.on("updated", this._handleQueuePointerUpdate);
-	}
-
-	private _unregisterQueuePointerEventHandlers(queuePointer): void {
-		queuePointer.off("updated", this._handleQueuePointerUpdate);
+		this._viewerCollection.on("contentchanged", this._handleContentChanged);
 	}
 
 	//#region Event Handlers
 
-	private _handleQueuePointerUpdate = (event) => {
-		const artifactId = this._getDocumentArtifactId();
-		this._updateDocumentArtifactId(artifactId);
-	};
-
-	private _handleQueuePointerChanged = (event) => {
-		this._unregisterQueuePointerEventHandlers(event.oldPointer);
-		this._registerQueuePointerEventHandlers(event.newPointer);
-		this._queuePointer = event.newPointer;
+	private _handleContentChanged = (event) => {
+		if (event.contentType === "queueitem")
+		{
+			const artifactId = this._getDocumentArtifactId();
+			this._updateDocumentArtifactId(artifactId);
+		}
+		this._updateDocumentArtifactIdElement("No queue item displayed");
 	};
 
 	//#endregion
 
 	private _getDocumentArtifactId(): number {
-		const queueItem = this._queuePointer.item;
+		const queueItem = this._viewerCollection.queuePointer.item;
 		if (queueItem && queueItem.type === "document") {
 			return queueItem.artifactId;
 		} else {
@@ -99,20 +86,25 @@ export class NavigationCardInstance {
 
 	private _wireUpButtons(): void {
 		document.getElementById(Constants.Navigation.NEXT_BTN_ID).addEventListener("click", () => {
-			this._queuePointer.navigateToNext();
+			this._viewerCollection.queuePointer.navigateToNext();
 		});
 		document.getElementById(Constants.Navigation.PREVIOUS_BTN_ID).addEventListener("click", () => {
-			this._queuePointer.navigateToPrevious();
+			this._viewerCollection.queuePointer.navigateToPrevious();
 		});
 	}
 
-	private _updateDocumentArtifactId(artifactId): void {
+	private _updateDocumentArtifactId(artifactId: number): void {
 		if (!this._loaded) {
 			return;
 		}
 
 		const artifactIdString = artifactId > 0 ? artifactId.toString() : "";
+		this._updateDocumentArtifactIdElement(artifactIdString);
+	}
+
+	private _updateDocumentArtifactIdElement(message: string)
+	{
 		const element = document.getElementById(Constants.Navigation.DOCUMENT_ARTIFACT_ID_ELEMENT_ID);
-		element.innerHTML = artifactIdString;
+		element.innerHTML = message;
 	}
 }
