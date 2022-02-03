@@ -6,7 +6,7 @@ import { LoggerFactory } from "./utilities/logger-factory";
 
 /**
  * This class serves as the extension configuration (IExtensionConfig)
- * See https://platform.relativity.com/relativityreviewapi/AA/interfaces/extensions.iextensionconfig.html for details.
+ * See https://platform.relativity.com/relativityreviewapi/12.0/interfaces/extensions.iextensionconfig.html for details.
  */
 export class SampleExtension {
 	private _extensionParameters;

@@ -104,19 +104,19 @@ Filtering console logs to only the Sample Extension's logs makes it easier to se
 
 ### Sample Functionality
 
-The sample extension has three custom cards: Clock, Color Controls, and Navigation. They are defined by setting the `cards` value on the [IExtensionConfig](https://platform.relativity.com/relativityreviewapi/AA/interfaces/extensions.iextensionconfig.html#cards) to an array of [ICardConfig](https://platform.relativity.com/relativityreviewapi/AA/interfaces/cards.icardconfig.html) objects. The sample extension also uses the Review Interface [IExtensionLifecycle.ready](https://platform.relativity.com/relativityreviewapi/AA/interfaces/extensions.iextensionlifecycle.html#ready) event to show the cards within the Review Interface by invoking [createCard](https://platform.relativity.com/relativityreviewapi/AA/interfaces/cards.icardservice.html#createcard).
+The sample extension has three custom cards: Clock, Color Controls, and Navigation. They are defined by setting the `cards` value on the [IExtensionConfig](https://platform.relativity.com/relativityreviewapi/12.0/interfaces/extensions.iextensionconfig.html#cards) to an array of [ICardConfig](https://platform.relativity.com/relativityreviewapi/12.0/interfaces/cards.icardconfig.html) objects. The sample extension also uses the Review Interface [IExtensionLifecycle.ready](https://platform.relativity.com/relativityreviewapi/12.0/interfaces/extensions.iextensionlifecycle.html#ready) event to show the cards within the Review Interface by invoking [createCard](https://platform.relativity.com/relativityreviewapi/12.0/interfaces/cards.icardservice.html#createcard).
 * The Clock card is an iframe card that loads custom HTML, CSS, and JS files to display a clock alongside the coding pane.
 * The Color Controls card is also an iframe card loading custom HTML, CSS, and JS files. It has button that changes the background color of the Navigation card.
 * The Navigation card has a custom loader. It displays the current document's artifact ID (staying up-to-date as the Review Interface moves between documents) and has two buttons, previous and next, that can invoke the Review Interface's document navigation.
 
-The sample extension also has one custom context menu option, Show Selected Text. It is defined by setting the `viewerContextMenus` option on the [IExtensionConfig](https://platform.relativity.com/relativityreviewapi/AA/interfaces/extensions.iextensionconfig.html#viewercontextmenus). In the native and text viewers when text has been highlighted, this custom context menu option is available. When clicked, Show Selected Text will display a browser alert containing the text that was selected.
+The sample extension also has one custom context menu option, Show Selected Text. It is defined by setting the `viewerContextMenus` option on the [IExtensionConfig](https://platform.relativity.com/relativityreviewapi/12.0/interfaces/extensions.iextensionconfig.html#viewercontextmenus). In the native and text viewers when text has been highlighted, this custom context menu option is available. When clicked, Show Selected Text will display a browser alert containing the text that was selected.
 
-There are additional features that enable extension scripts to define [custom viewers](https://platform.relativity.com/relativityreviewapi/AA/interfaces/extensions.iextensionconfig.html#viewers) and custom [toolbar controls](https://platform.relativity.com/relativityreviewapi/AA/interfaces/extensions.iextensionconfig.html#viewertoolbarcontrols). The [lifecycle events](https://platform.relativity.com/relativityreviewapi/AA/interfaces/extensions.iextensionconfig.html#lifecycle) also have access to the full Review Interface API and can be used to run any code to customize the Review Interface.
+There are additional features that enable extension scripts to define [custom viewers](https://platform.relativity.com/relativityreviewapi/12.0/interfaces/extensions.iextensionconfig.html#viewers) and custom [toolbar controls](https://platform.relativity.com/relativityreviewapi/12.0/interfaces/extensions.iextensionconfig.html#viewertoolbarcontrols). The [lifecycle events](https://platform.relativity.com/relativityreviewapi/12.0/interfaces/extensions.iextensionconfig.html#lifecycle) also have access to the full Review Interface API and can be used to run any code to customize the Review Interface.
 
 
 ## Build System
 
-This extension is built using the [TypeScript]{https://www.typescriptlang.org/} compiler and the [Webpack](https://webpack.js.org/) bundler. The TypeScript configuration can be found in `tsconfig.json` and the Webpack configuration can be found in `webpack.config.js`. It is important to note that you can replace the TypeScript compiler with something like Babel if you choose, as we are not leveraging any TypeScript-specific features other than its type system.
+This extension is built using the [TypeScript](https://www.typescriptlang.org/) compiler and the [Webpack](https://webpack.js.org/) bundler. The TypeScript configuration can be found in `tsconfig.json` and the Webpack configuration can be found in `webpack.config.js`. It is important to note that you can replace the TypeScript compiler with something like Babel if you choose, as we are not leveraging any TypeScript-specific features other than its type system.
 
 ### Webpack
 
@@ -130,7 +130,7 @@ More info on Webpack configuration can be found [here](https://webpack.js.org/co
 
 This project uses two Webpack plugins. The first is a custom plugin called `ReviewExtensionPlugin` that packages your output as a Review Extension Script so that it is ready to be uploaded to Relativity. The plugin source code can be found in `/build-utilities/review-extension-plugin.js`.
 
-When using the `ReviewExtensionPlugin`, the entry file (in this case, `/src/index.ts`) should define a default export function that returns an [IExtensionConfig](https://platform.relativity.com/relativityreviewapi/AA/interfaces/extensions.iextensionconfig.html). The plugin will add the invocation of the function so that the extension script out-put to the `/dist` directory is an immediately invoked function expression ([IIFE](https://developer.mozilla.org/en-US/docs/Glossary/IIFE)):
+When using the `ReviewExtensionPlugin`, the entry file (in this case, `/src/index.ts`) should define a default export function that returns an [IExtensionConfig](https://platform.relativity.com/relativityreviewapi/12.0/interfaces/extensions.iextensionconfig.html). The plugin will add the invocation of the function so that the extension script out-put to the `/dist` directory is an immediately invoked function expression ([IIFE](https://developer.mozilla.org/en-US/docs/Glossary/IIFE)):
 ```javascript
 (function(parameters){
 	// This function is defined from your entry file and its dependencies.
@@ -172,20 +172,20 @@ If you use this sample extension to build a new extension of your own, we sugges
 ## Communicating Between Cards
 In this sample extension, the Color Controls and Navigation cards demonstrate how two cards can communicate with one another.
 
-The Navigation card implements and exposes a public method `updateBackgroundGradient` on its [card instance](https://platform.relativity.com/relativityreviewapi/AA/interfaces/cards.icardinstance.html).
+The Navigation card implements and exposes a public method `updateBackgroundGradient` on its [card instance](https://platform.relativity.com/relativityreviewapi/12.0/interfaces/cards.icardinstance.html).
 
 The Color Controls card uses custom JavaScript to access the Navigation card via the Review Interface API and invoke the Navigation card's public method to update its background. (This code could as easily run in the `ColorControlsCardInstance` rather than in a JS file loaded by the Color Controls card.)
 
 ## Coordinating with Navigation
-The Navigation card uses a [Viewer Collection](https://platform.relativity.com/relativityreviewapi/AA/interfaces/viewer.iviewercollection.html) event handler to display the current document's artifact ID and keep it up to date.
+The Navigation card uses a [Viewer Collection](https://platform.relativity.com/relativityreviewapi/12.0/interfaces/viewer.iviewercollection.html) event handler to display the current document's artifact ID and keep it up to date.
 
 ### Listening for Navigation Events
 
 The Navigation card listens on the Viewer Collection [ContentChanged](https://platform.relativity.com/relativityreviewapi/12.0/enums/viewer.viewercollectioneventtype.html#contentchanged) event, which fires when the content displayed by the viewer changes. The content is usually a document, but it can also be an RDO file or a "placeholder" when there is no document or when an error has occurred. The ContentChanged event is triggered when navigating to a different document, or switching to a different viewer type, for example.
 
-In the future, the Review Interface may have multiple Viewer Collections. This sample extension is not future-proofed for that eventuality. The sample extension passes the [main collection](https://platform.relativity.com/relativityreviewapi/AA/interfaces/viewer.iviewerservice.html#maincollection) into the Navigation card when it is created in the [Ready]((https://platform.relativity.com/relativityreviewapi/AA/interfaces/extensions.iextensionlifecycle.html#ready)) lifecycle event handler and never updates the Navigation card's registered viewer collection.
+In the future, the Review Interface may have multiple Viewer Collections. This sample extension is not future-proofed for that eventuality. The sample extension passes the [main collection](https://platform.relativity.com/relativityreviewapi/12.0/interfaces/viewer.iviewerservice.html#maincollection) into the Navigation card when it is created in the [Ready](https://platform.relativity.com/relativityreviewapi/12.0/interfaces/extensions.iextensionlifecycle.html#ready) lifecycle event handler and never updates the Navigation card's registered viewer collection.
 
 ### Invoking Navigation
 
-The Navigation card can also control the Review Interface's navigation using its previous and next buttons. The previous and next buttons simply invoke the Queue Pointer's [navigateToNext](https://platform.relativity.com/relativityreviewapi/AA/interfaces/queue.iqueuepointer.html#navigatetonext) and [navigateToPrevious](https://platform.relativity.com/relativityreviewapi/AA/interfaces/queue.iqueuepointer.html#navigatetoprevious) API methods.
+The Navigation card can also control the Review Interface's navigation using its previous and next buttons. The previous and next buttons simply invoke the Queue Pointer's [navigateToNext](https://platform.relativity.com/relativityreviewapi/12.0/interfaces/queue.iqueuepointer.html#navigatetonext) and [navigateToPrevious](https://platform.relativity.com/relativityreviewapi/12.0/interfaces/queue.iqueuepointer.html#navigatetoprevious) API methods.
 
